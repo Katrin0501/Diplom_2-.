@@ -60,6 +60,17 @@ public class ClientBurger extends BaseApiClient {
 
     }
 
+    @Step("Обновление токена")
+    public static Response updateTokenUser(RefreshToken refreshToken) {
+
+        return (Response) given()
+                .spec(getSeqSpec())
+                .body(refreshToken)
+                .when()
+                .post(BASE_URL + "/api/auth/token").then().log().all().extract();
+
+    }
+
     @Step("Обновление данных Юзера без авторизаци")
     public static Response updateUserNoAuth(UserCreation userCreation) {
 

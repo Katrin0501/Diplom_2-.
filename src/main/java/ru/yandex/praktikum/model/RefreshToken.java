@@ -15,4 +15,5 @@ public class RefreshToken {
     public RefreshToken(String token) {
         this.token = token;
     }
+
 }

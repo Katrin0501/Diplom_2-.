@@ -3,7 +3,6 @@ package ru.yandex.praktikum;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import jdk.jfr.Description;
-import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 public class UpdateUserTest {
 
     UserCreation userCreation;
-    String user;
     String token;
     String refToken;
 
@@ -32,7 +30,6 @@ public class UpdateUserTest {
         sucUserReg(userCreation);
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreation.getEmail(), userCreation.getPassword());
         Response responseAuth = authUserReg(authorizationClient);
-        user = responseAuth.body().jsonPath().getString("user");
         token = responseAuth.body().jsonPath().getString("accessToken");
         refToken = responseAuth.body().jsonPath().getString("refreshToken");
 
@@ -45,7 +42,6 @@ public class UpdateUserTest {
     public void updateAllFieldsUserTest() {
         UserCreation userUpdNew = getRandomUser();
         Response resUpUser = updateUserWithAuth(userUpdNew, token);
-        user = resUpUser.body().jsonPath().getString("user");
         assertEquals(SC_OK, resUpUser.statusCode());
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
@@ -59,7 +55,6 @@ public class UpdateUserTest {
     public void updateEmailUserTest() {
         UserCreation userUpdNew = new UserCreation(getRandomUser().getEmail(), userCreation.getPassword(), userCreation.getName());
         Response resUpUser = updateUserWithAuth(userUpdNew, token);
-        user = resUpUser.body().jsonPath().getString("user");
         assertEquals(SC_OK, resUpUser.statusCode());
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
@@ -72,7 +67,6 @@ public class UpdateUserTest {
     public void updateNamelUserTest() {
         UserCreation userUpdNew = new UserCreation(userCreation.getEmail(), userCreation.getPassword(), getRandomUser().getName());
         Response resUpUser = updateUserWithAuth(userUpdNew, token);
-        user = resUpUser.body().jsonPath().getString("user");
         assertEquals(SC_OK, resUpUser.statusCode());
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
@@ -87,7 +81,6 @@ public class UpdateUserTest {
         sucUserReg(userCreationNew);
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreationNew.getEmail(), userCreationNew.getPassword());
         Response responseAuthNew = authUserReg(authorizationClient);
-        user = responseAuthNew.body().jsonPath().getString("user");
         token = responseAuthNew.body().jsonPath().getString("accessToken");
         UserCreation userUpdNew = new UserCreation(userCreation.getEmail(), "usPas", "usN");
         Response resUpUser = updateUserWithAuth(userUpdNew, token);
@@ -125,9 +118,9 @@ public class UpdateUserTest {
 
     @After
     public void clear() {
-        if (user != null) {
+        if (token != null) {
 
-            deleteUser(user);
+            deleteUser(token);
         }
     }
 

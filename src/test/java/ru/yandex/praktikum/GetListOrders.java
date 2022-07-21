@@ -21,7 +21,6 @@ import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 
 public class GetListOrders {
     UserCreation userCreation;
-    String user;
     String token;
     String fluorescentBun = "61c0c5a71d1f82001bdaaa6d";
     String biocutlet = "61c0c5a71d1f82001bdaaa71";
@@ -34,7 +33,6 @@ public class GetListOrders {
       sucUserReg(userCreation);
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreation.getEmail(), userCreation.getPassword());
         Response responseAuth = authUserReg(authorizationClient);
-        user = responseAuth.body().jsonPath().getString("user");
         token = responseAuth.body().jsonPath().getString("accessToken");
         List<String> ingredients = new ArrayList<>();
         ingredients.add(fluorescentBun);
@@ -66,9 +64,9 @@ public void getListOrdersAuthUserTest(){
     }
     @After
     public void clear() {
-        if (user !=null) {
+        if (token !=null) {
 
-            deleteUser(user);
+            deleteUser(token);
         }
     }
 

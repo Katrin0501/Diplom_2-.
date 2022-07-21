@@ -1,6 +1,6 @@
 package ru.yandex.praktikum;
 
-import com.google.gson.Gson;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
@@ -35,7 +35,6 @@ public class CreateOrderTest {
         sucUserReg(userCreation);
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreation.getEmail(), userCreation.getPassword());
         Response responseAuth = authUserReg(authorizationClient);
-        user = responseAuth.body().jsonPath().getString("user");
         token = responseAuth.body().jsonPath().getString("accessToken");
 
     }
@@ -110,9 +109,9 @@ public class CreateOrderTest {
     }
     @After
     public void clear() {
-        if (user !=null) {
+        if (token !=null) {
 
-            deleteUser(user);
+            deleteUser(token);
         }
     }
 

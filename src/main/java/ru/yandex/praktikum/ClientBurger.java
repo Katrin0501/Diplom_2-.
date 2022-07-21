@@ -33,15 +33,16 @@ public class ClientBurger extends BaseApiClient {
     }
 
     @Step("Удаление Юзера")
-    public static Boolean deleteUser(String user) {
+    public static Boolean deleteUser(String token) {
 
         return given()
                 .spec(getSeqSpec())
+                .headers(Map.of("authorization", token))
                 .when()
                 .delete(BASE_URL + "/api/auth/user")
                 .then()
                 .assertThat().log().all()
-                .statusCode(401)
+                .statusCode(202)
                 .extract()
                 .path("ok");
     }

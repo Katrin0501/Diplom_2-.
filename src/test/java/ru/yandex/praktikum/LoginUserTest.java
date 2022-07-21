@@ -20,6 +20,7 @@ import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 
 public class LoginUserTest {
     UserCreation userCreation;
+    String token;
     String user;
 
 
@@ -29,6 +30,7 @@ public class LoginUserTest {
         Response responseCreate = sucUserReg(userCreation);
         assertEquals(SC_OK, responseCreate.statusCode());
         user = responseCreate.body().jsonPath().getString("user");
+        token = responseCreate.body().jsonPath().getString("accessToken");
         assertTrue("true", responseCreate.body().jsonPath().getBoolean("success"));
 
     }
@@ -90,9 +92,9 @@ public class LoginUserTest {
 
     @After
     public void clear() {
-        if (user != null) {
+        if (token != null) {
 
-            deleteUser(user);
+            deleteUser(token);
 
         }
 

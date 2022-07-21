@@ -13,7 +13,6 @@ import ru.yandex.praktikum.model.UserCreation;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.yandex.praktikum.ClientBurger.*;
@@ -22,7 +21,7 @@ import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 public class UserCreationTest {
 
     UserCreation userCreation;
-    String user;
+    String token;
 
     @Before
     public void init() {
@@ -36,7 +35,7 @@ public class UserCreationTest {
     @Description("Базовый тест - успешного создания юзера и проверки его авторизации")
     public void successfulCreationTest() {
         Response responseCreate = sucUserReg(userCreation);
-        user = responseCreate.body().jsonPath().getString("user");
+        token = responseCreate.body().jsonPath().getString("accessToken");
         //Проверка
         assertEquals(SC_OK, responseCreate.statusCode());
         assertTrue("true",responseCreate.body().jsonPath().getBoolean("success"));
@@ -52,7 +51,7 @@ public class UserCreationTest {
     @Description("Повторное создание ранее зарегистрированного пользователя")
     public void regAnExistingUserTest() {
         Response responseCreate =sucUserReg(userCreation);
-        user = responseCreate.body().jsonPath().getString("user");
+        token = responseCreate.body().jsonPath().getString("accessToken");
         new UserCreation(userCreation.getEmail(),userCreation.getPassword(),userCreation.getName());
         Response responseCreateTwo = sucUserReg(userCreation);
         assertEquals(SC_FORBIDDEN, responseCreateTwo.statusCode());
@@ -74,9 +73,9 @@ public class UserCreationTest {
 
     @After
     public void clear() {
-        if (user !=null) {
+        if (token !=null) {
 
-            deleteUser(user);
+            deleteUser(token);
         }
     }
 

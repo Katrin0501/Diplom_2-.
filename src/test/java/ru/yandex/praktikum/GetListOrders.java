@@ -10,8 +10,10 @@ import org.junit.Test;
 import ru.yandex.praktikum.model.AuthorizationClient;
 import ru.yandex.praktikum.model.CreateOrder;
 import ru.yandex.praktikum.model.UserCreation;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -20,6 +22,7 @@ import static ru.yandex.praktikum.ClientBurger.*;
 import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 
 public class GetListOrders {
+
     UserCreation userCreation;
     String token;
     String fluorescentBun = "61c0c5a71d1f82001bdaaa6d";
@@ -30,7 +33,7 @@ public class GetListOrders {
     @Before
     public void init() {
         userCreation = getRandomUser();
-      sucUserReg(userCreation);
+        sucUserReg(userCreation);
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreation.getEmail(), userCreation.getPassword());
         Response responseAuth = authUserReg(authorizationClient);
         token = responseAuth.body().jsonPath().getString("accessToken");
@@ -42,33 +45,29 @@ public class GetListOrders {
         orderCreationAuth(createOrder, token);
     }
 
+    @Test
+    @DisplayName("Получить список заказов авторизованного пользователя") // имя теста
+    @Description("Проверка, что авторизованный пользователь получит список заказов")
+    public void getListOrdersAuthUserTest() {
+        Response resOrders = ordersListAuth(token);
+        assertEquals(SC_OK, resOrders.statusCode());
+        MatcherAssert.assertThat(resOrders.body().jsonPath().getList("orders"), notNullValue());
+    }
 
-@Test
-@DisplayName("Получить список заказов авторизованного пользователя") // имя теста
-@Description("Проверка, что авторизованный пользователь получит список заказов")
-public void getListOrdersAuthUserTest(){
-    Response resOrders = ordersListAuth(token);
-    assertEquals(SC_OK, resOrders.statusCode());
-    MatcherAssert.assertThat(resOrders.body().jsonPath().getList( "orders"), notNullValue());
-
-}
     @Test
     @DisplayName("Отсутстве списка заказов у неаворизованного пользователя") // имя теста
     @Description("Неавторизованный пользователь не может получить список заказов")
-    public void getListOrdersNoAuthUserTest(){
+    public void getListOrdersNoAuthUserTest() {
         Response resOrders = ordersListNoAuth();
         assertEquals(SC_UNAUTHORIZED, resOrders.statusCode());
         assertEquals("false", resOrders.body().jsonPath().getString("success"));
         assertEquals("You should be authorised", resOrders.body().jsonPath().getString("message"));
-
     }
+
     @After
     public void clear() {
-        if (token !=null) {
-
+        if (token != null) {
             deleteUser(token);
         }
     }
-
-
 }

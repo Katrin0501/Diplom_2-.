@@ -7,13 +7,12 @@ public class CreateOrder {
 
     @Override
     public String toString() {
-        return String.format("CreateOrder{ingredients='%s' }",ingredients);
+        return String.format("CreateOrder{ingredients='%s' }", ingredients);
     }
 
     public List<String> getIngredients() {
         return ingredients;
     }
-
 
     public CreateOrder(List<String> ingredients) {
         this.ingredients = ingredients;

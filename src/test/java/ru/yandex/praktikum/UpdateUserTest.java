@@ -32,8 +32,6 @@ public class UpdateUserTest {
         Response responseAuth = authUserReg(authorizationClient);
         token = responseAuth.body().jsonPath().getString("accessToken");
         refToken = responseAuth.body().jsonPath().getString("refreshToken");
-
-
     }
 
     @Test
@@ -46,7 +44,6 @@ public class UpdateUserTest {
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
         assertEquals(userUpdNew.getName(), resUpUser.body().jsonPath().getString("user.name"));
-
     }
 
     @Test
@@ -58,7 +55,6 @@ public class UpdateUserTest {
         assertEquals(SC_OK, resUpUser.statusCode());
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
-
     }
 
     @Test
@@ -70,7 +66,6 @@ public class UpdateUserTest {
         assertEquals(SC_OK, resUpUser.statusCode());
         assertTrue("true", resUpUser.body().jsonPath().getBoolean("success"));
         assertEquals(userUpdNew.getEmail(), resUpUser.body().jsonPath().getString("user.email"));
-
     }
 
     @Test
@@ -87,7 +82,6 @@ public class UpdateUserTest {
         assertEquals(SC_FORBIDDEN, resUpUser.statusCode());
         assertEquals("false", resUpUser.body().jsonPath().getString("success"));
         assertEquals("User with such email already exists", resUpUser.body().jsonPath().getString("message"));
-
     }
 
     @Test
@@ -99,7 +93,6 @@ public class UpdateUserTest {
         assertEquals(SC_UNAUTHORIZED, resUpUser.statusCode());
         assertEquals("false", resUpUser.body().jsonPath().getString("success"));
         assertEquals("You should be authorised", resUpUser.body().jsonPath().getString("message"));
-
     }
 
     @Test
@@ -112,16 +105,12 @@ public class UpdateUserTest {
         assertEquals("true", UpdToken.body().jsonPath().getString("success"));
         assertNotEquals(UpdToken.body().jsonPath().getString("refreshToken"), token);
         assertNotEquals(UpdToken.body().jsonPath().getString("accessToken"), refToken);
-
     }
-
 
     @After
     public void clear() {
         if (token != null) {
-
             deleteUser(token);
         }
     }
-
 }

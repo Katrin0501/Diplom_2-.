@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.yandex.praktikum.model.AuthorizationClient;
 import ru.yandex.praktikum.model.UserCreation;
+
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -19,10 +20,10 @@ import static ru.yandex.praktikum.model.AuthorizationClient.getRandomLogin;
 import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 
 public class LoginUserTest {
+
     UserCreation userCreation;
     String token;
     String user;
-
 
     @Before
     public void init() {
@@ -32,7 +33,6 @@ public class LoginUserTest {
         user = responseCreate.body().jsonPath().getString("user");
         token = responseCreate.body().jsonPath().getString("accessToken");
         assertTrue("true", responseCreate.body().jsonPath().getBoolean("success"));
-
     }
 
     @Test
@@ -46,7 +46,6 @@ public class LoginUserTest {
         MatcherAssert.assertThat(responseAuth.body().jsonPath().getString("refreshToken"), CoreMatchers.not(equalTo(0)));
         assertEquals(userCreation.getEmail(), responseAuth.body().jsonPath().getString("user.email"));
         assertEquals(userCreation.getName(), responseAuth.body().jsonPath().getString("user.name"));
-
     }
 
     @Test
@@ -89,14 +88,10 @@ public class LoginUserTest {
         assertEquals("email or password are incorrect", responseAuth.body().jsonPath().getString("message"));
     }
 
-
     @After
     public void clear() {
         if (token != null) {
-
             deleteUser(token);
-
         }
-
     }
 }

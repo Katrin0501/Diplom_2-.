@@ -6,7 +6,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User{'email='%s', name='%s'}",email,name);
+        return String.format("User{'email='%s', name='%s'}", email, name);
     }
 
     public User(String name, String email) {

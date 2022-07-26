@@ -2,7 +2,6 @@ package ru.yandex.praktikum.model;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-
 public class UserCreation {
     private String email;
     private String password;
@@ -29,7 +28,6 @@ public class UserCreation {
 
     public UserCreation() {
     }
-
 
 
     public String getEmail() {

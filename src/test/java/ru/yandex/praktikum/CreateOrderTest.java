@@ -12,7 +12,9 @@ import org.junit.Test;
 import ru.yandex.praktikum.model.AuthorizationClient;
 import ru.yandex.praktikum.model.CreateOrder;
 import ru.yandex.praktikum.model.UserCreation;
+
 import java.util.*;
+
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -20,8 +22,8 @@ import static ru.yandex.praktikum.ClientBurger.*;
 import static ru.yandex.praktikum.model.UserCreation.getRandomUser;
 
 public class CreateOrderTest {
+
     UserCreation userCreation;
-    String user;
     String token;
     List<String> ingredients;
     String fluorescentBun = "61c0c5a71d1f82001bdaaa6d";
@@ -36,9 +38,7 @@ public class CreateOrderTest {
         AuthorizationClient authorizationClient = new AuthorizationClient(userCreation.getEmail(), userCreation.getPassword());
         Response responseAuth = authUserReg(authorizationClient);
         token = responseAuth.body().jsonPath().getString("accessToken");
-
     }
-
 
     @Test
     @DisplayName("Создание заказа авторизованного пользователя") // имя теста
@@ -51,7 +51,6 @@ public class CreateOrderTest {
         CreateOrder createOrder = new CreateOrder(ingredients);
         Response orders = orderCreationAuth(createOrder, token);
         assertEquals(SC_OK, orders.statusCode());
-
     }
 
     @Test
@@ -65,7 +64,6 @@ public class CreateOrderTest {
         CreateOrder createOrder = new CreateOrder(ingredients);
         Response orders = orderCreationAuth(createOrder, token);
         assertEquals(SC_INTERNAL_SERVER_ERROR, orders.statusCode());
-
     }
 
     @Test
@@ -79,7 +77,6 @@ public class CreateOrderTest {
         assertEquals(SC_BAD_REQUEST, orders.statusCode());
         assertEquals("false", orders.body().jsonPath().getString("success"));
         assertEquals("One or more ids provided are incorrect", orders.body().jsonPath().getString("message"));
-
     }
 
     @Test
@@ -91,8 +88,8 @@ public class CreateOrderTest {
         assertEquals(SC_BAD_REQUEST, orders.statusCode());
         assertEquals("false", orders.body().jsonPath().getString("success"));
         assertEquals("Ingredient ids must be provided", orders.body().jsonPath().getString("message"));
-
     }
+
     @Test
     @DisplayName("Получение номера заказа неавторизованного пользователя") // имя теста
     @Description("Пользователь не авторизован,но имеет возможность сделать заказа")
@@ -104,16 +101,13 @@ public class CreateOrderTest {
         Response ordersNoAuth = orderCreationNoAuth(createOrder);
         assertEquals(SC_OK, ordersNoAuth.statusCode());
         assertEquals("true", ordersNoAuth.body().jsonPath().getString("success"));
-        MatcherAssert.assertThat(ordersNoAuth.body().jsonPath().getString( "orders.number"), CoreMatchers.not(equalTo(0)));
-
+        MatcherAssert.assertThat(ordersNoAuth.body().jsonPath().getString("orders.number"), CoreMatchers.not(equalTo(0)));
     }
+
     @After
     public void clear() {
-        if (token !=null) {
-
+        if (token != null) {
             deleteUser(token);
         }
     }
-
-
 }

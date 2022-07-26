@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.yandex.praktikum.model.UserCreation;
+
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,7 +27,6 @@ public class UserCreationTest {
     @Before
     public void init() {
         userCreation = getRandomUser();
-
     }
 
 
@@ -38,25 +38,23 @@ public class UserCreationTest {
         token = responseCreate.body().jsonPath().getString("accessToken");
         //Проверка
         assertEquals(SC_OK, responseCreate.statusCode());
-        assertTrue("true",responseCreate.body().jsonPath().getBoolean("success"));
-        assertEquals(userCreation.getEmail(),responseCreate.body().jsonPath().getString("user.email"));
-        assertEquals(userCreation.getName(),responseCreate.body().jsonPath().getString("user.name"));
-        MatcherAssert.assertThat(responseCreate.body().jsonPath().getString( "accessToken"), CoreMatchers.not(equalTo(0)));
-        MatcherAssert.assertThat(responseCreate.body().jsonPath().getString( "refreshToken"), CoreMatchers.not(equalTo(0)));
-
+        assertTrue("true", responseCreate.body().jsonPath().getBoolean("success"));
+        assertEquals(userCreation.getEmail(), responseCreate.body().jsonPath().getString("user.email"));
+        assertEquals(userCreation.getName(), responseCreate.body().jsonPath().getString("user.name"));
+        MatcherAssert.assertThat(responseCreate.body().jsonPath().getString("accessToken"), CoreMatchers.not(equalTo(0)));
+        MatcherAssert.assertThat(responseCreate.body().jsonPath().getString("refreshToken"), CoreMatchers.not(equalTo(0)));
     }
 
     @Test
     @DisplayName("Регистрация пользователя, который уже зарегистрирован") // имя теста
     @Description("Повторное создание ранее зарегистрированного пользователя")
     public void regAnExistingUserTest() {
-        Response responseCreate =sucUserReg(userCreation);
+        Response responseCreate = sucUserReg(userCreation);
         token = responseCreate.body().jsonPath().getString("accessToken");
-        new UserCreation(userCreation.getEmail(),userCreation.getPassword(),userCreation.getName());
+        new UserCreation(userCreation.getEmail(), userCreation.getPassword(), userCreation.getName());
         Response responseCreateTwo = sucUserReg(userCreation);
         assertEquals(SC_FORBIDDEN, responseCreateTwo.statusCode());
-        assertEquals("User already exists",responseCreateTwo.body().jsonPath().getString("message"));
-
+        assertEquals("User already exists", responseCreateTwo.body().jsonPath().getString("message"));
     }
 
     @Test
@@ -67,16 +65,12 @@ public class UserCreationTest {
         Response responseCreateTwo = sucUserReg(userCreationNull);
         assertEquals(SC_FORBIDDEN, responseCreateTwo.statusCode());
         assertEquals("Email, password and name are required fields", responseCreateTwo.body().jsonPath().getString("message"));
-
-
     }
 
     @After
     public void clear() {
-        if (token !=null) {
-
+        if (token != null) {
             deleteUser(token);
         }
     }
-
 }

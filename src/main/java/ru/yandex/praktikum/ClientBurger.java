@@ -3,6 +3,7 @@ package ru.yandex.praktikum;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import ru.yandex.praktikum.model.*;
+
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -46,7 +47,6 @@ public class ClientBurger extends BaseApiClient {
                 .extract()
                 .path("ok");
     }
-
 
 
     @Step("Обновление данных Юзера с авторизацией")
